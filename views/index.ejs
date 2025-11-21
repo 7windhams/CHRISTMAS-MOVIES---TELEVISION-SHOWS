@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .header {
+            text-align: center;
+            color: #c41e3a;
+            margin-bottom: 30px;
+        }
+        .api-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .endpoint {
+            background-color: #f8f9fa;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        code {
+            background-color: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        .christmas-theme {
+            background: linear-gradient(45deg, #c41e3a, #228b22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="christmas-theme">🎄 Christmas Movies & TV Shows API 🎄</h1>
+        <p>Your festive entertainment database API</p>
+    </div>
+
+    <div class="api-section">
+        <h2>Available Endpoints</h2>
+        
+        <div class="endpoint">
+            <h3>GET /api/movies</h3>
+            <p>Retrieve all Christmas movies</p>
+            <code>http://localhost:3000/api/movies</code>
+        </div>
+
+        <div class="endpoint">
+            <h3>GET /api/movies/:id</h3>
+            <p>Get a specific movie by ID</p>
+            <code>http://localhost:3000/api/movies/1</code>
+        </div>
+
+        <div class="endpoint">
+            <h3>GET /api/tvshows</h3>
+            <p>Retrieve all Christmas TV shows</p>
+            <code>http://localhost:3000/api/tvshows</code>
+        </div>
+
+        <div class="endpoint">
+            <h3>GET /api/tvshows/:id</h3>
+            <p>Get a specific TV show by ID</p>
+            <code>http://localhost:3000/api/tvshows/1</code>
+        </div>
+    </div>
+
+    <div class="api-section">
+        <h2>Getting Started</h2>
+        <ol>
+            <li>Set up your MySQL database with the required tables</li>
+            <li>Configure your environment variables</li>
+            <li>Start making requests to the API endpoints above</li>
+        </ol>
+    </div>
+</body>
+</html>
