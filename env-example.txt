@@ -1,0 +1,15 @@
+# Christmas Movies Database Configuration
+# Copy this file to .env and update with your database credentials
+
+# Database Configuration
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=
+DB_NAME=christmas_movies
+
+# Server Configuration
+PORT=3000
+NODE_ENV=development
+
+# Optional: Add other configurations as needed
+# SESSION_SECRET=your_session_secret_here

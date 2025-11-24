@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .header {
+            text-align: center;
+            color: #c41e3a;
+            margin-bottom: 30px;
+        }
+        .christmas-theme {
+            background: linear-gradient(45deg, #c41e3a, #228b22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .navigation {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .navigation a {
+            display: inline-block;
+            margin: 0 15px;
+            padding: 10px 20px;
+            background-color: #c41e3a;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .navigation a:hover {
+            background-color: #a01729;
+        }
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .actor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .actor-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .actor-card:hover {
+            transform: translateY(-2px);
+        }
+        .actor-name {
+            color: #c41e3a;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .actor-meta {
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+        .actor-bio {
+            line-height: 1.4;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="christmas-theme">🎭 <%= title %> 🎭</h1>
+        <p>Talented actors in Christmas entertainment</p>
+    </div>
+
+    <div class="navigation">
+        <a href="/">Home</a>
+        <a href="/programs">All Programs</a>
+        <a href="/actors">Actors</a>
+        <a href="/add-actor">Add Actor</a>
+        <a href="/add-program">Add Program</a>
+    </div>
+
+    <% if (typeof success !== 'undefined') { %>
+        <div class="success-message">
+            Actor added successfully!
+        </div>
+    <% } %>
+
+    <div class="actor-grid">
+        <% actors.forEach(actor => { %>
+            <div class="actor-card">
+                <div class="actor-name"><%= actor.name %></div>
+                <% if (actor.birth_date) { %>
+                    <div class="actor-meta">📅 Born: <%= new Date(actor.birth_date).toLocaleDateString() %></div>
+                <% } %>
+                <% if (actor.nationality) { %>
+                    <div class="actor-meta">🌍 Nationality: <%= actor.nationality %></div>
+                <% } %>
+                <% if (actor.biography) { %>
+                    <div class="actor-bio"><%= actor.biography %></div>
+                <% } %>
+            </div>
+        <% }); %>
+    </div>
+</body>
+</html>

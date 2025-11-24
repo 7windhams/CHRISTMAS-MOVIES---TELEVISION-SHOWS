@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .header {
+            text-align: center;
+            color: #c41e3a;
+            margin-bottom: 30px;
+        }
+        .christmas-theme {
+            background: linear-gradient(45deg, #c41e3a, #228b22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .navigation {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .navigation a {
+            display: inline-block;
+            margin: 0 15px;
+            padding: 10px 20px;
+            background-color: #c41e3a;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .navigation a:hover {
+            background-color: #a01729;
+        }
+        .program-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        .program-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .program-card:hover {
+            transform: translateY(-2px);
+        }
+        .program-title {
+            color: #c41e3a;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .program-meta {
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+        .program-description {
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+        .program-cast {
+            font-size: 0.9em;
+            color: #555;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+        .rating {
+            background-color: #ffd700;
+            color: #333;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="christmas-theme">🎄 <%= title %> 🎄</h1>
+        <p>Complete collection of Christmas entertainment</p>
+    </div>
+
+    <div class="navigation">
+        <a href="/">Home</a>
+        <a href="/programs">All Programs</a>
+        <a href="/actors">Actors</a>
+        <a href="/add-actor">Add Actor</a>
+        <a href="/add-program">Add Program</a>
+    </div>
+
+    <% if (typeof success !== 'undefined') { %>
+        <div class="success-message">
+            Program added successfully!
+        </div>
+    <% } %>
+
+    <div class="program-grid">
+        <% programs.forEach(program => { %>
+            <div class="program-card">
+                <div class="program-title"><%= program.title %></div>
+                <div class="program-meta">
+                    📅 <%= program.yr_released %> • 
+                    🎬 <%= program.format %> • 
+                    📺 <%= program.program_rating %>
+                    <% if (program.rating) { %>
+                        • <span class="rating">⭐ <%= program.rating %></span>
+                    <% } %>
+                </div>
+                <div class="program-description">
+                    <%= program.description %>
+                </div>
+                <% if (program.producer_name) { %>
+                    <div class="program-meta">👤 Producer: <%= program.producer_name %></div>
+                <% } %>
+                <% if (program.directors) { %>
+                    <div class="program-cast">🎯 Directors: <%= program.directors %></div>
+                <% } %>
+                <% if (program.actors) { %>
+                    <div class="program-cast">🎭 Cast: <%= program.actors %></div>
+                <% } %>
+                <% if (program.streaming_platforms) { %>
+                    <div class="program-cast">📺 Available on: <%= program.streaming_platforms %></div>
+                <% } %>
+            </div>
+        <% }); %>
+    </div>
+</body>
+</html>

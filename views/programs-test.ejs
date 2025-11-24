@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+</head>
+<body>
+    <h1><%= title %></h1>
+    <p>Found <%= programs.length %> programs</p>
+    
+    <% programs.forEach(program => { %>
+        <div>
+            <h3><%= program.title %></h3>
+            <p>Year: <%= program.yr_released %></p>
+            <p>Rating: <%= program.program_rating %></p>
+            <p><%= program.description %></p>
+        </div>
+    <% }); %>
+</body>
+</html>

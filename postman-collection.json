@@ -1,0 +1,267 @@
+{
+  "info": {
+    "name": "Christmas Movies API",
+    "description": "API endpoints for the Christmas Movies and TV Shows database",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Programs",
+      "item": [
+        {
+          "name": "Get All Programs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/programs",
+              "host": ["{{base_url}}"],
+              "path": ["api", "programs"]
+            }
+          }
+        },
+        {
+          "name": "Get Program by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/programs/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "programs", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Programs by Rating",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/programs/rating/PG",
+              "host": ["{{base_url}}"],
+              "path": ["api", "programs", "rating", "PG"]
+            }
+          }
+        },
+        {
+          "name": "Get Programs by Platform",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/programs/platform/Netflix",
+              "host": ["{{base_url}}"],
+              "path": ["api", "programs", "platform", "Netflix"]
+            }
+          }
+        },
+        {
+          "name": "Get Movies Only",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/movies",
+              "host": ["{{base_url}}"],
+              "path": ["api", "movies"]
+            }
+          }
+        },
+        {
+          "name": "Get TV Shows Only",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/tvshows",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tvshows"]
+            }
+          }
+        },
+        {
+          "name": "Get Programs by Format",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/programs/format/animation",
+              "host": ["{{base_url}}"],
+              "path": ["api", "programs", "format", "animation"]
+            }
+          }
+        },
+        {
+          "name": "Get Programs by Year Range",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/programs/years/1990/2000",
+              "host": ["{{base_url}}"],
+              "path": ["api", "programs", "years", "1990", "2000"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Actors",
+      "item": [
+        {
+          "name": "Get All Actors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/actors",
+              "host": ["{{base_url}}"],
+              "path": ["api", "actors"]
+            }
+          }
+        },
+        {
+          "name": "Get Actor by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/actors/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "actors", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Actor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ryan Reynolds\",\n  \"birth_date\": \"1976-10-23\",\n  \"nationality\": \"Canadian\",\n  \"biography\": \"Canadian actor known for comedic roles and superhero films.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/actors",
+              "host": ["{{base_url}}"],
+              "path": ["api", "actors"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Directors",
+      "item": [
+        {
+          "name": "Get All Directors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/directors",
+              "host": ["{{base_url}}"],
+              "path": ["api", "directors"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Producers",
+      "item": [
+        {
+          "name": "Get All Producers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/producers",
+              "host": ["{{base_url}}"],
+              "path": ["api", "producers"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Streaming Platforms",
+      "item": [
+        {
+          "name": "Get All Streaming Platforms",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/streaming-platforms",
+              "host": ["{{base_url}}"],
+              "path": ["api", "streaming-platforms"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Search",
+      "item": [
+        {
+          "name": "Search Programs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/search?q=home&type=programs",
+              "host": ["{{base_url}}"],
+              "path": ["api", "search"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "home"
+                },
+                {
+                  "key": "type",
+                  "value": "programs"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search Actors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/search?q=will&type=actors",
+              "host": ["{{base_url}}"],
+              "path": ["api", "search"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "will"
+                },
+                {
+                  "key": "type",
+                  "value": "actors"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ]
+}

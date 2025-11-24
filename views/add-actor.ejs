@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .header {
+            text-align: center;
+            color: #c41e3a;
+            margin-bottom: 30px;
+        }
+        .christmas-theme {
+            background: linear-gradient(45deg, #c41e3a, #228b22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .navigation {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .navigation a {
+            display: inline-block;
+            margin: 0 15px;
+            padding: 10px 20px;
+            background-color: #c41e3a;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .navigation a:hover {
+            background-color: #a01729;
+        }
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+        }
+        .required {
+            color: #c41e3a;
+        }
+        .submit-btn {
+            background-color: #228b22;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .submit-btn:hover {
+            background-color: #1e7b1e;
+        }
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .help-text {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="christmas-theme">🎭 <%= title %> 🎭</h1>
+        <p>Add a new actor to our Christmas database</p>
+    </div>
+
+    <div class="navigation">
+        <a href="/">Home</a>
+        <a href="/programs">All Programs</a>
+        <a href="/actors">Actors</a>
+        <a href="/add-actor">Add Actor</a>
+    </div>
+
+    <div class="form-container">
+        <% if (typeof error !== 'undefined') { %>
+            <div class="error-message">
+                <strong><%= error %></strong>
+            </div>
+        <% } %>
+
+        <form method="POST" action="/add-actor">
+            <div class="form-group">
+                <label for="name">Full Name <span class="required">*</span></label>
+                <input type="text" id="name" name="name" required
+                       placeholder="e.g., Tom Hanks, Emma Thompson"
+                       value="<%= typeof formData !== 'undefined' ? formData.name || '' : '' %>">
+                <div class="help-text">Enter the actor's full name as it should appear in credits</div>
+            </div>
+
+            <div class="form-group">
+                <label for="birth_date">Birth Date</label>
+                <input type="date" id="birth_date" name="birth_date"
+                       value="<%= typeof formData !== 'undefined' ? formData.birth_date || '' : '' %>">
+                <div class="help-text">Optional: Actor's date of birth</div>
+            </div>
+
+            <div class="form-group">
+                <label for="nationality">Nationality</label>
+                <input type="text" id="nationality" name="nationality"
+                       placeholder="e.g., American, British, Canadian"
+                       value="<%= typeof formData !== 'undefined' ? formData.nationality || '' : '' %>">
+                <div class="help-text">Optional: Actor's nationality</div>
+            </div>
+
+            <div class="form-group">
+                <label for="biography">Biography</label>
+                <textarea id="biography" name="biography" 
+                          placeholder="Brief description of the actor's career and notable works..."
+                ><%= typeof formData !== 'undefined' ? formData.biography || '' : '' %></textarea>
+                <div class="help-text">Optional: Brief biography or notable information about the actor</div>
+            </div>
+
+            <button type="submit" class="submit-btn">Add Actor</button>
+            <a href="/actors" style="margin-left: 15px; color: #666; text-decoration: none;">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>

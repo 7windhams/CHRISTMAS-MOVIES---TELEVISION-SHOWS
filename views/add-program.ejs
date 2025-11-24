@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .header {
+            text-align: center;
+            color: #c41e3a;
+            margin-bottom: 30px;
+        }
+        .christmas-theme {
+            background: linear-gradient(45deg, #c41e3a, #228b22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .navigation {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .navigation a {
+            display: inline-block;
+            margin: 0 15px;
+            padding: 10px 20px;
+            background-color: #c41e3a;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .navigation a:hover {
+            background-color: #a01729;
+        }
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        .form-row .form-group {
+            flex: 1;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+        }
+        .required {
+            color: #c41e3a;
+        }
+        .submit-btn {
+            background-color: #228b22;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .submit-btn:hover {
+            background-color: #1e7b1e;
+        }
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .help-text {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+        .checkbox-section {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
+        .checkbox-section h4 {
+            margin-top: 0;
+            color: #c41e3a;
+        }
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="christmas-theme">🎬 <%= title %> 🎄</h1>
+        <p>Add a new Christmas program to our database</p>
+    </div>
+
+    <div class="navigation">
+        <a href="/">Home</a>
+        <a href="/programs">All Programs</a>
+        <a href="/actors">Actors</a>
+        <a href="/add-actor">Add Actor</a>
+        <a href="/add-program">Add Program</a>
+    </div>
+
+    <div class="form-container">
+        <% if (typeof error !== 'undefined') { %>
+            <div class="error-message">
+                <strong><%= error %></strong>
+            </div>
+        <% } %>
+
+        <form method="POST" action="/add-program">
+            <div class="form-group">
+                <label for="title">Program Title <span class="required">*</span></label>
+                <input type="text" id="title" name="title" required
+                       placeholder="e.g., Home Alone, Elf, A Christmas Story"
+                       value="<%= typeof formData !== 'undefined' ? formData.title || '' : '' %>">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="yr_released">Year Released <span class="required">*</span></label>
+                    <input type="number" id="yr_released" name="yr_released" required
+                           min="1900" max="2030"
+                           value="<%= typeof formData !== 'undefined' ? formData.yr_released || '' : '' %>">
+                </div>
+                <div class="form-group">
+                    <label for="runtime">Runtime (minutes)</label>
+                    <input type="number" id="runtime" name="runtime"
+                           min="1" max="300"
+                           value="<%= typeof formData !== 'undefined' ? formData.runtime || '' : '' %>">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="format">Format <span class="required">*</span></label>
+                    <select id="format" name="format" required>
+                        <option value="">Select format...</option>
+                        <option value="live-action" <%= typeof formData !== 'undefined' && formData.format === 'live-action' ? 'selected' : '' %>>Live Action</option>
+                        <option value="animation" <%= typeof formData !== 'undefined' && formData.format === 'animation' ? 'selected' : '' %>>Animation</option>
+                        <option value="stop-motion" <%= typeof formData !== 'undefined' && formData.format === 'stop-motion' ? 'selected' : '' %>>Stop Motion</option>
+                        <option value="mixed-media" <%= typeof formData !== 'undefined' && formData.format === 'mixed-media' ? 'selected' : '' %>>Mixed Media</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="type">Program Type <span class="required">*</span></label>
+                    <select id="type" name="type" required>
+                        <option value="">Select type...</option>
+                        <option value="movie" <%= typeof formData !== 'undefined' && formData.type === 'movie' ? 'selected' : '' %>>Movie</option>
+                        <option value="tv_show" <%= typeof formData !== 'undefined' && formData.type === 'tv_show' ? 'selected' : '' %>>TV Show</option>
+                        <option value="special" <%= typeof formData !== 'undefined' && formData.type === 'special' ? 'selected' : '' %>>Special</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="program_rating">Rating <span class="required">*</span></label>
+                    <select id="program_rating" name="program_rating" required>
+                        <option value="">Select rating...</option>
+                        <option value="G" <%= typeof formData !== 'undefined' && formData.program_rating === 'G' ? 'selected' : '' %>>G</option>
+                        <option value="PG" <%= typeof formData !== 'undefined' && formData.program_rating === 'PG' ? 'selected' : '' %>>PG</option>
+                        <option value="PG-13" <%= typeof formData !== 'undefined' && formData.program_rating === 'PG-13' ? 'selected' : '' %>>PG-13</option>
+                        <option value="R" <%= typeof formData !== 'undefined' && formData.program_rating === 'R' ? 'selected' : '' %>>R</option>
+                        <option value="TV-Y" <%= typeof formData !== 'undefined' && formData.program_rating === 'TV-Y' ? 'selected' : '' %>>TV-Y</option>
+                        <option value="TV-G" <%= typeof formData !== 'undefined' && formData.program_rating === 'TV-G' ? 'selected' : '' %>>TV-G</option>
+                        <option value="TV-PG" <%= typeof formData !== 'undefined' && formData.program_rating === 'TV-PG' ? 'selected' : '' %>>TV-PG</option>
+                        <option value="TV-14" <%= typeof formData !== 'undefined' && formData.program_rating === 'TV-14' ? 'selected' : '' %>>TV-14</option>
+                        <option value="TV-MA" <%= typeof formData !== 'undefined' && formData.program_rating === 'TV-MA' ? 'selected' : '' %>>TV-MA</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="rating">User Rating (1-10)</label>
+                    <input type="number" id="rating" name="rating" 
+                           min="1" max="10" step="0.1"
+                           value="<%= typeof formData !== 'undefined' ? formData.rating || '' : '' %>">
+                    <div class="help-text">Rate the program from 1.0 to 10.0</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="producer_id">Producer</label>
+                <select id="producer_id" name="producer_id">
+                    <option value="">Select producer...</option>
+                    <% producers.forEach(producer => { %>
+                        <option value="<%= producer.producer_id %>" 
+                                <%= typeof formData !== 'undefined' && formData.producer_id == producer.producer_id ? 'selected' : '' %>>
+                            <%= producer.name %>
+                        </option>
+                    <% }); %>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="img_url">Image URL</label>
+                <input type="url" id="img_url" name="img_url"
+                       placeholder="https://example.com/movie-poster.jpg"
+                       value="<%= typeof formData !== 'undefined' ? formData.img_url || '' : '' %>">
+                <div class="help-text">Optional: URL to a movie poster or promotional image</div>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description <span class="required">*</span></label>
+                <textarea id="description" name="description" required
+                          placeholder="Brief plot summary or description of the program..."
+                ><%= typeof formData !== 'undefined' ? formData.description || '' : '' %></textarea>
+            </div>
+
+            <!-- TV Show specific fields -->
+            <div id="tv-fields" style="display: none;">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="seasons">Number of Seasons</label>
+                        <input type="number" id="seasons" name="seasons" min="1" max="50"
+                               value="<%= typeof formData !== 'undefined' ? formData.seasons || '' : '' %>">
+                    </div>
+                    <div class="form-group">
+                        <label for="episodes">Total Episodes</label>
+                        <input type="number" id="episodes" name="episodes" min="1" max="1000"
+                               value="<%= typeof formData !== 'undefined' ? formData.episodes || '' : '' %>">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Directors Selection -->
+            <div class="checkbox-section">
+                <h4>Directors</h4>
+                <div class="help-text">Select all directors who worked on this program</div>
+                <div class="checkbox-grid">
+                    <% directors.forEach(director => { %>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="director_<%= director.director_id %>" 
+                                   name="directors" value="<%= director.director_id %>"
+                                   <%= typeof formData !== 'undefined' && formData.directors && formData.directors.includes(director.director_id.toString()) ? 'checked' : '' %>>
+                            <label for="director_<%= director.director_id %>"><%= director.name %></label>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+
+            <!-- Actors Selection -->
+            <div class="checkbox-section">
+                <h4>Actors</h4>
+                <div class="help-text">Select main actors who appear in this program</div>
+                <div class="checkbox-grid">
+                    <% actors.forEach(actor => { %>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="actor_<%= actor.actor_id %>" 
+                                   name="actors" value="<%= actor.actor_id %>"
+                                   <%= typeof formData !== 'undefined' && formData.actors && formData.actors.includes(actor.actor_id.toString()) ? 'checked' : '' %>>
+                            <label for="actor_<%= actor.actor_id %>"><%= actor.name %></label>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+
+            <!-- Streaming Platforms Selection -->
+            <div class="checkbox-section">
+                <h4>Streaming Platforms</h4>
+                <div class="help-text">Select platforms where this program is currently available</div>
+                <div class="checkbox-grid">
+                    <% streamingPlatforms.forEach(platform => { %>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="platform_<%= platform.platform_id %>" 
+                                   name="platforms" value="<%= platform.platform_id %>"
+                                   <%= typeof formData !== 'undefined' && formData.platforms && formData.platforms.includes(platform.platform_id.toString()) ? 'checked' : '' %>>
+                            <label for="platform_<%= platform.platform_id %>"><%= platform.name %></label>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <button type="submit" class="submit-btn">Add Program</button>
+                <a href="/programs" style="margin-left: 15px; color: #666; text-decoration: none;">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Show/hide TV show specific fields
+        document.getElementById('type').addEventListener('change', function() {
+            const tvFields = document.getElementById('tv-fields');
+            if (this.value === 'tv_show') {
+                tvFields.style.display = 'block';
+            } else {
+                tvFields.style.display = 'none';
+                // Clear TV show fields if not TV show
+                document.getElementById('seasons').value = '';
+                document.getElementById('episodes').value = '';
+            }
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const typeSelect = document.getElementById('type');
+            if (typeSelect.value === 'tv_show') {
+                document.getElementById('tv-fields').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
