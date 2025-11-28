@@ -4,80 +4,101 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f9fa;
-        }
-        .header {
-            text-align: center;
-            color: #c41e3a;
-            margin-bottom: 30px;
-        }
-        .christmas-theme {
-            background: linear-gradient(45deg, #c41e3a, #228b22);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .navigation {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .navigation a {
-            display: inline-block;
-            margin: 0 15px;
-            padding: 10px 20px;
-            background-color: #c41e3a;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .navigation a:hover {
-            background-color: #a01729;
-        }
-        .program-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 20px;
-        }
-        .program-card {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
-        }
-        .program-card:hover {
-            transform: translateY(-2px);
-        }
-        .program-title {
-            color: #c41e3a;
-            font-size: 1.3em;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .program-meta {
-            color: #666;
-            margin-bottom: 10px;
-            font-size: 0.9em;
-        }
-        .program-description {
-            line-height: 1.4;
-            margin-bottom: 15px;
-        }
-        .program-cast {
-            font-size: 0.9em;
-            color: #555;
-            border-top: 1px solid #eee;
-            padding-top: 10px;
-        }
-        .rating {
-            background-color: #ffd700;
-            color: #333;
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="christmas-theme">🎬 <%= title %> 🎭</h1>
+            <div class="christmas-lights">
+                <div class="light"></div>
+                <div class="light"></div>
+                <div class="light"></div>
+                <div class="light"></div>
+                <div class="light"></div>
+            </div>
+            <p style="color: var(--christmas-green-dark); font-size: 20px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">
+                🎄 Complete Collection of Holiday Entertainment 🎅
+            </p>
+        </div>
+
+        <div class="navigation">
+            <a href="/" class="nav-link">🏠 Home</a>
+            <a href="/programs" class="nav-link">🎬 All Programs</a>
+            <a href="/actors" class="nav-link">🌟 Actors</a>
+            <a href="/add-actor" class="nav-link">➕ Add Actor</a>
+            <a href="/add-program" class="nav-link">🎭 Add Program</a>
+        </div>
+        <div class="stats">
+            <h2>🎄 Our Holiday Program Collection 🎄</h2>
+            <p style="font-size: 22px; margin-bottom: 20px;">Browse through our complete collection of festive entertainment!</p>
+            <div class="total-count"><%= programs.length %></div>
+            <p style="font-size: 18px; margin-top: 15px;">Total Programs Available</p>
+            <div class="holiday-badge">🎬 Movies & TV Shows 📺</div>
+            <div class="holiday-badge">🎅 Holiday Classics 🎄</div>
+        </div>
+
+        <div class="grid grid-2">
+            <% programs.forEach(program => { %>
+                <div class="program-card">
+                    <div class="program-title">🎬 <%= program.title %></div>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin: 15px 0;">
+                        <div class="program-meta">📅 <%= program.yr_released %></div>
+                        <div class="program-meta">🎭 <%= program.format %></div>
+                        <div class="program-meta">📺 <%= program.program_rating %></div>
+                        <% if (program.rating) { %>
+                            <div class="program-meta">⭐ <%= program.rating %>/10</div>
+                        <% } %>
+                        <% if (program.runtime) { %>
+                            <div class="program-meta">⏰ <%= program.runtime %> min</div>
+                        <% } %>
+                    </div>
+
+                    <div class="program-description" style="margin: 15px 0; padding: 15px; background: linear-gradient(135deg, #f8f9fa, #e9ecef); border-radius: 10px; border-left: 4px solid var(--christmas-gold);">
+                        📖 <%= program.description || 'No description available' %>
+                    </div>
+
+                    <% if (program.producer_name) { %>
+                        <div style="margin: 10px 0; padding: 10px; background: linear-gradient(90deg, var(--christmas-green), var(--winter-blue)); color: var(--snow-white); border-radius: 15px; text-align: center;">
+                            🎬 Producer: <strong><%= program.producer_name %></strong>
+                        </div>
+                    <% } %>
+
+                    <% if (program.directors) { %>
+                        <div style="margin: 10px 0; padding: 10px; background: linear-gradient(90deg, var(--christmas-red), var(--christmas-gold)); color: var(--snow-white); border-radius: 15px; text-align: center;">
+                            🎭 Directors: <strong><%= program.directors %></strong>
+                        </div>
+                    <% } %>
+
+                    <% if (program.actors) { %>
+                        <div style="margin: 10px 0; padding: 10px; background: linear-gradient(90deg, var(--winter-blue), var(--christmas-green)); color: var(--snow-white); border-radius: 15px; text-align: center;">
+                            🌟 Cast: <strong><%= program.actors %></strong>
+                        </div>
+                    <% } %>
+
+                    <% if (program.streaming_platforms) { %>
+                        <div style="margin: 10px 0; padding: 10px; background: linear-gradient(90deg, var(--christmas-gold), var(--christmas-red)); color: var(--snow-white); border-radius: 15px; text-align: center;">
+                            📺 Available on: <strong><%= program.streaming_platforms %></strong>
+                        </div>
+                    <% } %>
+                </div>
+            <% }); %>
+        </div>
+
+        <div style="text-align: center; margin: 40px 0;">
+            <div class="christmas-lights">
+                <div class="light"></div>
+                <div class="light"></div>
+                <div class="light"></div>
+                <div class="light"></div>
+                <div class="light"></div>
+            </div>
+            <p style="font-size: 18px; color: var(--christmas-red-dark); margin: 20px 0;">
+                🎅 Happy Holidays! Enjoy your festive viewing! 🎁
+            </p>
+        </div>
+    </div>
             padding: 2px 8px;
             border-radius: 12px;
             font-size: 0.8em;
@@ -86,62 +107,6 @@
         .success-message {
             background-color: #d4edda;
             color: #155724;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h1 class="christmas-theme">🎄 <%= title %> 🎄</h1>
-        <p>Complete collection of Christmas entertainment</p>
-    </div>
 
-    <div class="navigation">
-        <a href="/">Home</a>
-        <a href="/programs">All Programs</a>
-        <a href="/actors">Actors</a>
-        <a href="/add-actor">Add Actor</a>
-        <a href="/add-program">Add Program</a>
-    </div>
-
-    <% if (typeof success !== 'undefined') { %>
-        <div class="success-message">
-            Program added successfully!
-        </div>
-    <% } %>
-
-    <div class="program-grid">
-        <% programs.forEach(program => { %>
-            <div class="program-card">
-                <div class="program-title"><%= program.title %></div>
-                <div class="program-meta">
-                    📅 <%= program.yr_released %> • 
-                    🎬 <%= program.format %> • 
-                    📺 <%= program.program_rating %>
-                    <% if (program.rating) { %>
-                        • <span class="rating">⭐ <%= program.rating %></span>
-                    <% } %>
-                </div>
-                <div class="program-description">
-                    <%= program.description %>
-                </div>
-                <% if (program.producer_name) { %>
-                    <div class="program-meta">👤 Producer: <%= program.producer_name %></div>
-                <% } %>
-                <% if (program.directors) { %>
-                    <div class="program-cast">🎯 Directors: <%= program.directors %></div>
-                <% } %>
-                <% if (program.actors) { %>
-                    <div class="program-cast">🎭 Cast: <%= program.actors %></div>
-                <% } %>
-                <% if (program.streaming_platforms) { %>
-                    <div class="program-cast">📺 Available on: <%= program.streaming_platforms %></div>
-                <% } %>
-            </div>
-        <% }); %>
-    </div>
 </body>
 </html>
