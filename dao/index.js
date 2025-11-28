@@ -1,11 +1,15 @@
 // dao/index.js - DAO module exports
-const { MockProgramDao, MockActorDao, MockDirectorDao, MockProducerDao, MockStreamingPlatformDao } = require('./mockDao');
+const ProgramDao = require('./programDao');
+const ActorDao = require('./actorDao');
+const DirectorDao = require('./directorDao');
+const ProducerDao = require('./producerDao');
+const StreamingPlatformDao = require('./streamingPlatformDao');
 
-// Using Mock DAOs until MySQL is installed
+// Export real DAO classes for database connection
 module.exports = {
-  ProgramDao: MockProgramDao,
-  ActorDao: MockActorDao,
-  DirectorDao: MockDirectorDao,
-  ProducerDao: MockProducerDao,
-  StreamingPlatformDao: MockStreamingPlatformDao
+  ProgramDao,
+  ActorDao,
+  DirectorDao,
+  ProducerDao,
+  StreamingPlatformDao
 };

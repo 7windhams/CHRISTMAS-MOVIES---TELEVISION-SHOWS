@@ -6,6 +6,7 @@
  * Run with: node setup-database.js
  */
 
+require('dotenv').config();
 const mysql = require('mysql2/promise');
 const fs = require('fs').promises;
 const path = require('path');
@@ -14,7 +15,7 @@ const path = require('path');
 const dbConfig = {
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
+  password: process.env.DB_PASSWORD || 'Sdw$1956',
   // Don't specify database initially - we need to create it
 };
 
