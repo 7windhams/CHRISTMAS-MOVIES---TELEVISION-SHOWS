@@ -82,8 +82,14 @@ app.get('/', async (req, res) => {
     const producerCount = await producerDao.countAll();
     const platformCount = await streamingPlatformDao.countAll();
     
+    // Get sample programs for preview
+    const programs = await programDao.findAll();
+    const samplePrograms = programs.slice(0, 6); // Show first 6 programs
+    
     res.render('index', {
       title: 'Christmas Movies & TV Shows Database',
+      totalPrograms: programCount,
+      programs: samplePrograms,
       stats: {
         programs: programCount,
         actors: actorCount,
@@ -272,6 +278,50 @@ app.get('/api/programs/:id', async (req, res) => {
       success: false,
       error: 'Unable to fetch program'
     });
+  }
+});
+
+// Delete program endpoint
+app.delete('/api/programs/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await programDao.delete(id);
+    
+    if (result.affectedRows > 0) {
+      res.json({ 
+        success: true, 
+        message: 'Program deleted successfully',
+        deletedId: id 
+      });
+    } else {
+      res.status(404).json({ 
+        success: false, 
+        error: 'Program not found' 
+      });
+    }
+  } catch (error) {
+    console.error('Error deleting program:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Internal server error' 
+    });
+  }
+});
+
+// Web route for deleting programs
+app.post('/programs/:id/delete', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await programDao.delete(id);
+    
+    if (result.affectedRows > 0) {
+      res.redirect('/programs?deleted=success');
+    } else {
+      res.redirect('/programs?error=not-found');
+    }
+  } catch (error) {
+    console.error('Error deleting program:', error);
+    res.redirect('/programs?error=server-error');
   }
 });
 

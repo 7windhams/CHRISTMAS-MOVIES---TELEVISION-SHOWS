@@ -102,7 +102,7 @@
     <div class="actor-grid">
         <% actors.forEach(actor => { %>
             <div class="actor-card">
-                <div class="actor-name"><%= actor.name %></div>
+                <div class="actor-name"><%= actor.first_name %> <%= actor.last_name %></div>
                 <% if (actor.birth_date) { %>
                     <div class="actor-meta">📅 Born: <%= new Date(actor.birth_date).toLocaleDateString() %></div>
                 <% } %>

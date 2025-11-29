@@ -80,6 +80,19 @@ const mockPrograms = [
     directors: "Various",
     actors: "Steve Carell, John Krasinski, Jenna Fischer",
     streaming_platforms: "Peacock, Netflix"
+  },
+  {
+    program_id: "p5oy5wm",
+    title: "A Charlie Brown Christmas",
+    yr_released: 1965,
+    format: "Movie",
+    program_rating: "G",
+    rating: "8.3",
+    description: "Charlie Brown searches for the true meaning of Christmas with help from his faithful dog Snoopy.",
+    producer_name: "Bill Melendez",
+    directors: "Bill Melendez",
+    actors: "Peter Robbins, Tracy Stratford",
+    streaming_platforms: "Apple TV+, Paramount+"
   }
 ];
 
@@ -113,7 +126,7 @@ class MockProgramDao {
   }
 
   async findById(id) {
-    return mockPrograms.find(p => p.program_id === parseInt(id));
+    return mockPrograms.find(p => p.program_id === parseInt(id) || p.program_id === id);
   }
 
   async countAll() {
@@ -151,12 +164,21 @@ class MockProgramDao {
   }
 
   async update(id, data) {
-    const index = mockPrograms.findIndex(p => p.program_id === parseInt(id));
+    const index = mockPrograms.findIndex(p => p.program_id === parseInt(id) || p.program_id === id);
     if (index !== -1) {
       mockPrograms[index] = { ...mockPrograms[index], ...data };
       return { affectedRows: 1, changedRows: 1 };
     }
     return { affectedRows: 0, changedRows: 0 };
+  }
+
+  async delete(id) {
+    const index = mockPrograms.findIndex(p => p.program_id === parseInt(id) || p.program_id === id);
+    if (index !== -1) {
+      mockPrograms.splice(index, 1);
+      return { affectedRows: 1 };
+    }
+    return { affectedRows: 0 };
   }
 }
 

@@ -17,7 +17,7 @@
                 <div class="light"></div>
                 <div class="light"></div>
             </div>
-            <p style="color: var(--christmas-green-dark); font-size: 20px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">
+            <p style="color: var(--christmas-gold); font-size: 20px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
                 🎄 Complete Collection of Holiday Entertainment 🎅
             </p>
         </div>
@@ -29,6 +29,33 @@
             <a href="/add-actor" class="nav-link">➕ Add Actor</a>
             <a href="/add-program" class="nav-link">🎭 Add Program</a>
         </div>
+        
+        <!-- Success/Error Messages -->
+        <script>
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('deleted') === 'success') {
+                const message = document.createElement('div');
+                message.innerHTML = '✅ Program deleted successfully!';
+                message.style.cssText = 'background: #d4edda; color: #155724; padding: 15px; margin: 20px 0; border-radius: 8px; text-align: center; font-weight: bold;';
+                document.querySelector('.container').insertBefore(message, document.querySelector('.stats'));
+                setTimeout(() => message.remove(), 5000);
+            }
+            if (urlParams.get('added') === 'success') {
+                const message = document.createElement('div');
+                message.innerHTML = '🎬 Program added successfully!';
+                message.style.cssText = 'background: #d4edda; color: #155724; padding: 15px; margin: 20px 0; border-radius: 8px; text-align: center; font-weight: bold;';
+                document.querySelector('.container').insertBefore(message, document.querySelector('.stats'));
+                setTimeout(() => message.remove(), 5000);
+            }
+            if (urlParams.get('error')) {
+                const message = document.createElement('div');
+                const errorType = urlParams.get('error');
+                message.innerHTML = errorType === 'not-found' ? '❌ Program not found!' : '❌ Error deleting program!';
+                message.style.cssText = 'background: #f8d7da; color: #721c24; padding: 15px; margin: 20px 0; border-radius: 8px; text-align: center; font-weight: bold;';
+                document.querySelector('.container').insertBefore(message, document.querySelector('.stats'));
+                setTimeout(() => message.remove(), 5000);
+            }
+        </script>
         <div class="stats">
             <h2>🎄 Our Holiday Program Collection 🎄</h2>
             <p style="font-size: 22px; margin-bottom: 20px;">Browse through our complete collection of festive entertainment!</p>
@@ -82,6 +109,15 @@
                             📺 Available on: <strong><%= program.streaming_platforms %></strong>
                         </div>
                     <% } %>
+                    
+                    <!-- Delete button -->
+                    <div style="margin: 15px 0; text-align: center;">
+                        <form action="/programs/<%= program.program_id %>/delete" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this program?');">
+                            <button type="submit" style="background: linear-gradient(90deg, #dc3545, #c82333); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2);" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                                🗑️ Delete Program
+                            </button>
+                        </form>
+                    </div>
                 </div>
             <% }); %>
         </div>

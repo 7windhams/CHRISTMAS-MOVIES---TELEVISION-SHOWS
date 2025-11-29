@@ -1,4 +1,6 @@
 const express = require('express');
+const https = require('https');
+const fs = require('fs');
 const cors = require('cors');
 const helmet = require('helmet');
 const path = require('path');
@@ -10,6 +12,7 @@ const { MockProgramDao, MockActorDao } = require('./dao/mockDao');
 
 const app = express();
 const PORT = 3000;
+const HTTPS_PORT = 3443;
 
 // Set up my DAOs
 const programDao = new MockProgramDao();
@@ -45,7 +48,21 @@ function isValidId(id) {
 }
 
 // Middleware setup
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https:"]
+    }
+  },
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true
+  }
+}));
 app.use(cors());
 app.use(limiter);
 app.use(express.json());
@@ -57,6 +74,14 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Static files
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Force HTTPS redirect middleware
+app.use((req, res, next) => {
+  if (req.header('x-forwarded-proto') !== 'https' && !req.secure) {
+    return res.redirect(`https://${req.header('host')}${req.url}`);
+  }
+  next();
+});
 
 // Routes
 app.get('/', async (req, res) => {
@@ -194,17 +219,20 @@ app.post('/add-actor', async (req, res) => {
     // Basic validation
     let errors = [];
     
-    if (!isValidName(first_name)) {
-      errors.push('Please enter a valid first name');
+    if (!first_name || !isValidName(first_name)) {
+      errors.push('Valid first name is required (letters, spaces, hyphens, and apostrophes only)');
     }
-    if (!isValidName(last_name)) {
-      errors.push('Please enter a valid last name');
+    
+    if (!last_name || !isValidName(last_name)) {
+      errors.push('Valid last name is required (letters, spaces, hyphens, and apostrophes only)');
     }
-    if (!isValidDate(birth_date)) {
-      errors.push('Please enter a valid birth date');
+    
+    if (!birth_date || !isValidDate(birth_date)) {
+      errors.push('Valid birth date is required (cannot be in the future)');
     }
-    if (!isValidNationality(nationality)) {
-      errors.push('Please enter a valid nationality');
+    
+    if (!nationality || !isValidNationality(nationality)) {
+      errors.push('Valid nationality is required (letters and spaces only)');
     }
     
     if (errors.length > 0) {
@@ -245,7 +273,7 @@ app.get('/api/programs/:id', async (req, res) => {
   try {
     const id = req.params.id;
     if (!isValidId(id)) {
-      return res.status(400).json({ error: 'Invalid ID' });
+      return res.status(400).json({ error: 'Invalid program ID' });
     }
     
     const program = await programDao.findById(id);
@@ -255,7 +283,7 @@ app.get('/api/programs/:id', async (req, res) => {
       res.status(404).json({ error: 'Program not found' });
     }
   } catch (error) {
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: 'Could not get program' });
   }
 });
 
@@ -330,38 +358,111 @@ app.post('/programs/:id/delete', async (req, res) => {
   }
 });
 
-// Search
-app.get('/api/search', async (req, res) => {
+// Create self-signed certificate for development
+const createSelfSignedCert = () => {
+  const selfsigned = require('selfsigned');
+  const attrs = [
+    { name: 'commonName', value: 'localhost' },
+    { name: 'countryName', value: 'US' },
+    { shortName: 'ST', value: 'MS' },
+    { name: 'localityName', value: 'Jackson' },
+    { name: 'organizationName', value: 'Christmas Movies App' }
+  ];
+  
+  const pems = selfsigned.generate(attrs, { 
+    keySize: 2048,
+    days: 365,
+    algorithm: 'sha256',
+    extensions: [{
+      name: 'basicConstraints',
+      cA: true
+    }, {
+      name: 'keyUsage',
+      keyCertSign: true,
+      digitalSignature: true,
+      nonRepudiation: true,
+      keyEncipherment: true,
+      dataEncipherment: true
+    }, {
+      name: 'subjectAltName',
+      altNames: [{
+        type: 2, // DNS
+        value: 'localhost'
+      }, {
+        type: 7, // IP
+        ip: '127.0.0.1'
+      }]
+    }]
+  });
+  
+  return {
+    key: pems.private,
+    cert: pems.cert
+  };
+};
+
+// Start HTTPS server
+try {
+  let httpsOptions;
+  
+  // Try to use existing SSL certificates
   try {
-    const { type, query } = req.query;
-    
-    if (!type || !query) {
-      return res.status(400).json({ error: 'Missing type or query' });
+    httpsOptions = {
+      key: fs.readFileSync(path.join(__dirname, 'ssl', 'private.key')),
+      cert: fs.readFileSync(path.join(__dirname, 'ssl', 'certificate.crt'))
+    };
+    console.log('📜 Using existing SSL certificates');
+  } catch (err) {
+    // Generate self-signed certificate for development
+    console.log('🔧 Generating self-signed certificate for development...');
+    try {
+      const selfSignedCert = createSelfSignedCert();
+      httpsOptions = {
+        key: selfSignedCert.key,
+        cert: selfSignedCert.cert
+      };
+      console.log('✅ Self-signed certificate generated');
+    } catch (selfSignedErr) {
+      console.log('❌ Could not generate self-signed certificate. Using HTTP only.');
+      // Fallback to HTTP only
+      app.listen(PORT, () => {
+        console.log(`🎄 Christmas Movies App running on:`);
+        console.log(`   HTTP:  http://localhost:${PORT}`);
+        console.log('⚠️  HTTPS not available - SSL certificate generation failed');
+      });
+      module.exports = app;
+      return;
     }
-    
-    let results = [];
-    if (type === 'programs') {
-      results = await programDao.search('title', query);
-    } else if (type === 'actors') {
-      results = await actorDao.search('last_name', query);
-    }
-    
-    res.json(results);
-  } catch (error) {
-    res.status(500).json({ error: 'Search failed' });
   }
-});
+  
+  // Start HTTPS server
+  https.createServer(httpsOptions, app).listen(HTTPS_PORT, () => {
+    console.log(`🎄 Christmas Movies App running on:`);
+    console.log(`   HTTPS: https://localhost:${HTTPS_PORT}`);
+    console.log(`   HTTP:  http://localhost:${PORT} (redirects to HTTPS)`);
+    console.log('🔒 Secure connection established!');
+  });
+  
+  // Start HTTP server that redirects to HTTPS
+  const httpApp = express();
+  httpApp.use((req, res) => {
+    res.redirect(`https://${req.headers.host.replace(`:${PORT}`, `:${HTTPS_PORT}`)}${req.url}`);
+  });
+  
+  httpApp.listen(PORT, () => {
+    console.log(`🔄 HTTP redirect server running on port ${PORT}`);
+  });
 
-// 404 handler
-app.use((req, res) => {
-  if (req.path.startsWith('/api')) {
-    res.status(404).json({ error: 'Not found' });
-  } else {
-    res.status(404).render('404', { title: 'Page Not Found' });
-  }
-});
+} catch (error) {
+  console.error('❌ HTTPS setup failed:', error.message);
+  console.log('🔄 Falling back to HTTP only...');
+  
+  // Fallback to HTTP only
+  app.listen(PORT, () => {
+    console.log(`🎄 Christmas Movies App running on:`);
+    console.log(`   HTTP: http://localhost:${PORT}`);
+    console.log('⚠️  HTTPS not available');
+  });
+}
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+module.exports = app;

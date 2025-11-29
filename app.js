@@ -473,6 +473,50 @@ app.get('/api/streaming-platforms', async (req, res) => {
   }
 });
 
+// Delete program endpoint
+app.delete('/api/programs/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await programDao.delete(id);
+    
+    if (result.affectedRows > 0) {
+      res.json({ 
+        success: true, 
+        message: 'Program deleted successfully',
+        deletedId: id 
+      });
+    } else {
+      res.status(404).json({ 
+        success: false, 
+        error: 'Program not found' 
+      });
+    }
+  } catch (error) {
+    console.error('Error deleting program:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Internal server error' 
+    });
+  }
+});
+
+// Web route for deleting programs
+app.post('/programs/:id/delete', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await programDao.delete(id);
+    
+    if (result.affectedRows > 0) {
+      res.redirect('/programs?deleted=success');
+    } else {
+      res.redirect('/programs?error=not-found');
+    }
+  } catch (error) {
+    console.error('Error deleting program:', error);
+    res.redirect('/programs?error=server-error');
+  }
+});
+
 // Search endpoint
 app.get('/api/search', async (req, res) => {
   try {
